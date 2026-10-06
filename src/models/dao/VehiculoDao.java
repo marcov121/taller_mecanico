@@ -160,6 +160,51 @@ public class VehiculoDao {
         return datos;
     }
     
+    public List<VehiculoDetalle> findDetalleByPersona(int idPersona) {
+        Connection cn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        List<VehiculoDetalle> datos = new ArrayList<>();
+        try {
+            cn = MySqlConexion.getConexion();
+            String sql = "SELECT v.id_veh, CONCAT(p.nom_per, ' ', p.ape_per) AS cliente, p.num_doc_per, "
+                    + "ma.nom_mar, mo.nom_mod, v.pla_veh, v.ani_veh, v.col_veh "
+                    + "FROM tb_vehiculo v "
+                    + "INNER JOIN tb_persona p ON p.id_per = v.id_per_veh "
+                    + "INNER JOIN tb_modelo mo ON mo.id_mod = v.id_mod_veh "
+                    + "INNER JOIN tb_marca ma ON ma.id_mar = mo.id_mar_mod "
+                    + "WHERE v.id_per_veh = ? "
+                    + "ORDER BY v.id_veh DESC";
+            pstm = cn.prepareStatement(sql);
+            pstm.setInt(1, idPersona);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                VehiculoDetalle d = new VehiculoDetalle();
+                d.setIdVehiculo(rs.getInt("id_veh"));
+                d.setClienteNombreCompleto(rs.getString("cliente"));
+                d.setDocumentoCliente(rs.getString("num_doc_per"));
+                d.setMarca(rs.getString("nom_mar"));
+                d.setModelo(rs.getString("nom_mod"));
+                d.setPlaca(rs.getString("pla_veh"));
+                int anio = rs.getInt("ani_veh");
+                d.setAnio(rs.wasNull() ? null : anio);
+                d.setColor(rs.getString("col_veh"));
+                datos.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstm != null) pstm.close();
+                if (cn != null) cn.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return datos;
+    }
+
     public List<Marca> findAllMarca(){
         Connection cn =null;
         PreparedStatement ps = null;    

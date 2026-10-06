@@ -64,7 +64,6 @@ public class frmCliente extends javax.swing.JFrame {
         btnVolver = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblClientes = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,12 +116,15 @@ public class frmCliente extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Num Documento", "Nombres", "Apellidos", "Telefono", "Direccion", "Sexo", "Estado"
+                "ID", "Num Documento", "Nombres", "Apellidos", "Telefono", "Direccion", "Sexo", "Estado"
             }
         ));
+        tblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tblClientesMouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblClientes);
-
-        jButton1.setText("NUEVO");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -141,9 +143,7 @@ public class frmCliente extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(80, 80, 80)
+                                .addGap(202, 202, 202)
                                 .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(28, 28, 28)
                                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -202,13 +202,12 @@ public class frmCliente extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnActualizar)
-                    .addComponent(btnEliminar)
-                    .addComponent(jButton1))
+                    .addComponent(btnEliminar))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnVolver)
-                .addGap(19, 19, 19))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         pack();
@@ -224,6 +223,7 @@ public class frmCliente extends javax.swing.JFrame {
             String sexo = p.getSexo() == 'M' ? "Masculino" : "Femenino";
             String estado = p.getEstado() == '1' ? "Activo" : "Inactivo";
             model.addRow(new Object[]{
+                p.getIdPersona(),
                 p.getNumeroDocumento(),
                 p.getNombres(),
                 p.getApellidos(),
@@ -289,6 +289,50 @@ public class frmCliente extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    private void tblClientesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseReleased
+        // TODO add your handling code here:
+        cargarFilaSeleccionada();
+    }//GEN-LAST:event_tblClientesMouseReleased
+
+    private void cargarFilaSeleccionada(){
+        int fila = tblClientes.getSelectedRow();
+        if (fila < 0) return;
+
+        DefaultTableModel modelo = (DefaultTableModel) tblClientes.getModel();
+
+        String telefono = modelo.getValueAt(fila, 4) != null
+                ? String.valueOf(modelo.getValueAt(fila, 4)) : "";
+        String sexoStr  = String.valueOf(modelo.getValueAt(fila, 6));
+
+        txtId.setText(String.valueOf(modelo.getValueAt(fila, 0)));
+        txtId.setEnabled(false);
+        txtDocumento.setText(String.valueOf(modelo.getValueAt(fila, 1)));
+        txtNombres.setText(String.valueOf(modelo.getValueAt(fila, 2)));
+        txtApellidos.setText(String.valueOf(modelo.getValueAt(fila, 3)));
+        txtTelefono.setText(telefono);
+        txtDireccion.setText(String.valueOf(modelo.getValueAt(fila, 5)));
+        cboSexo.setSelectedItem(sexoStr);
+
+        clienteActual = new Persona();
+        clienteActual.setIdPersona((int) modelo.getValueAt(fila, 0));
+        clienteActual.setNumeroDocumento(String.valueOf(modelo.getValueAt(fila, 1)));
+        clienteActual.setNombres(String.valueOf(modelo.getValueAt(fila, 2)));
+        clienteActual.setApellidos(String.valueOf(modelo.getValueAt(fila, 3)));
+        clienteActual.setTelefono(telefono.isEmpty() ? null : telefono);
+        clienteActual.setDireccion(String.valueOf(modelo.getValueAt(fila, 5)));
+        clienteActual.setSexo(sexoStr.equals("Masculino") ? 'M' : 'F');
+        clienteActual.setEstado("Activo".equals(modelo.getValueAt(fila, 7)) ? '1' : '0');
+    }
+    
+    void limpiarFormulario() {
+        txtId.setText("");
+        txtDocumento.setText("");
+        txtNombres.setText("");
+        txtApellidos.setText("");
+        txtTelefono.setText("");
+        txtDireccion.setText("");
+        
+    }
     /**
      * @param args the command line arguments
      */
@@ -319,7 +363,6 @@ public class frmCliente extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cboSexo;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -17,7 +17,7 @@ public class MySqlConexion {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             String user = "root";
-            String pass= "root";
+            String pass= "mysql";
             String url = "jdbc:mysql://localhost/taller_mecanico?serverTimezone=UTC";
             cn = DriverManager.getConnection(url,user,pass);
         }catch(Exception e){

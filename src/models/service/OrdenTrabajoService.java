@@ -9,6 +9,8 @@ import models.dao.OrdenTrabajoDao;
 import models.entities.Mecanico;
 import models.entities.OrdenTrabajo;
 import models.entities.OrdenTrabajoDetalle;
+import models.entities.Producto;
+import models.entities.Servicio;
 import models.entities.Vehiculo;
 
 /**
@@ -36,5 +38,37 @@ public class OrdenTrabajoService {
     
     public List<OrdenTrabajoDetalle> listarTodas() {
         return ordenTrabajoDao.findAll();
+    }
+
+    public List<OrdenTrabajoDetalle> listarPorPersona(int idPersona) {
+        return ordenTrabajoDao.findByPersona(idPersona);
+    }
+
+    public List<Servicio> listarServicios() {
+        return ordenTrabajoDao.findServicios();
+    }
+
+    public List<Producto> listarProductos() {
+        return ordenTrabajoDao.findProductosActivos();
+    }
+
+    public boolean guardarDetalleServicio(int idOT, int idServicio, double precio) {
+        return ordenTrabajoDao.saveDetalleServicio(idOT, idServicio, precio);
+    }
+
+    public boolean guardarDetalleProducto(int idOT, int idProducto, int cantidad, double precio) {
+        return ordenTrabajoDao.saveDetalleProducto(idOT, idProducto, cantidad, precio);
+    }
+
+    public boolean actualizarTotal(int idOT, double total) {
+        return ordenTrabajoDao.actualizarTotal(idOT, total);
+    }
+
+    public List<Object[]> obtenerDetalleServicio(int idOT) {
+        return ordenTrabajoDao.findDetalleServicioByOT(idOT);
+    }
+
+    public List<Object[]> obtenerDetalleProducto(int idOT) {
+        return ordenTrabajoDao.findDetalleProductoByOT(idOT);
     }
 }

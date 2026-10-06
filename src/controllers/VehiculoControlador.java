@@ -47,6 +47,10 @@ public class VehiculoControlador {
     public List<Vehiculo> findVehiculosByPersona(int idPersona) {
         return vehiculoService.findVehiculosByPersona(idPersona);
     }
+
+    public List<VehiculoDetalle> listarPorPersona(int idPersona) {
+        return vehiculoService.listarDetalleByPersona(idPersona);
+    }
     
     public boolean actualizar(Vehiculo vehiculo) {
         return vehiculoService.actualizarVehiculo(vehiculo);

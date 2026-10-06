@@ -42,6 +42,18 @@ public class ReservaControlador {
         return reservaService.listarTodos();
     }
     
+    public List<ReservaDetalle> listarPorPersona(int idPersona) {
+        return reservaService.listarPorPersona(idPersona);
+    }
+
+    public List<ReservaDetalle> buscarReservasPorDocCliente(String numDoc) {
+        return reservaService.buscarReservasPendientesByDocCliente(numDoc);
+    }
+
+    public boolean convertirAOrden(int idReserva) {
+        return reservaService.convertirReservaAOrden(idReserva);
+    }
+
     public List<AgendaDisponibilidad> generarHorariosDisponibles() {
         return reservaService.generarHorariosDisponibles();
     }

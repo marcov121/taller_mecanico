@@ -419,8 +419,10 @@ public class frmReportes extends javax.swing.JFrame {
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         // TODO add your handling code here:
-        new frmMenuPrincipal(usuarioSesion).setVisible(true);
-        dispose();
+        javax.swing.JFrame menuDestino = (usuarioSesion != null) ? new frmMenuPrincipal(usuarioSesion) : new frmMenuPrincipal();
+        menuDestino.setVisible(true);
+        menuDestino.setLocationRelativeTo(null);
+        this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
     /**

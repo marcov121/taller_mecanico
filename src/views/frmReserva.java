@@ -50,6 +50,16 @@ public class frmReserva extends javax.swing.JFrame {
     public frmReserva(models.entities.Usuario usuarioSesion) {
         this();
         this.usuarioSesion = usuarioSesion;
+        if (usuarioSesion != null && usuarioSesion.getIdRol() == 1) {
+            models.entities.Persona p = usuarioSesion.getPersona();
+            txtCliente.setText(p.getNumeroDocumento());
+            txtCliente.setEnabled(false);
+            btnBuscar.setEnabled(false);
+            clienteSeleccionado = p;
+            cargarVehiculosCliente();
+            cargarHorariosDisponibles();
+            cargarTablaReservas();
+        }
     }
 
     /**
@@ -352,14 +362,19 @@ public class frmReserva extends javax.swing.JFrame {
     
     void cargarHorariosDisponibles() {
         cboHorario.removeAllItems();
-        horariosDisponibles = reservaControlador.listarHorariosDisponibles();
+        horariosDisponibles = reservaControlador.generarHorariosDisponibles();
         for (AgendaDisponibilidad a : horariosDisponibles) {
             cboHorario.addItem(a.toString());
         }
     }
     
     void cargarTablaReservas() {
-        List<ReservaDetalle> reservas = reservaControlador.listarTodas();
+        List<ReservaDetalle> reservas;
+        if (usuarioSesion != null && usuarioSesion.getIdRol() == 1) {
+            reservas = reservaControlador.listarPorPersona(usuarioSesion.getPersona().getIdPersona());
+        } else {
+            reservas = reservaControlador.listarTodas();
+        }
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
         modelo.setRowCount(0);
         for (ReservaDetalle r : reservas) {

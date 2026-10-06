@@ -35,6 +35,18 @@ public class ReservaService {
         return reservaDao.findAll();
     }
     
+    public List<ReservaDetalle> listarPorPersona(int idPersona) {
+        return reservaDao.findByPersona(idPersona);
+    }
+
+    public List<ReservaDetalle> buscarReservasPendientesByDocCliente(String numDoc) {
+        return reservaDao.findReservasPendientesByDocCliente(numDoc);
+    }
+
+    public boolean convertirReservaAOrden(int idReserva) {
+        return reservaDao.convertirAOrden(idReserva);
+    }
+
     public List<AgendaDisponibilidad> generarHorariosDisponibles() {
         return agendaDao.generarDisponibles(7, java.time.LocalTime.of(9, 0), java.time.LocalTime.of(17, 0));
     }

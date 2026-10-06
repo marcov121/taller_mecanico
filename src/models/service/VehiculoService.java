@@ -37,6 +37,10 @@ public class VehiculoService {
     public List<Vehiculo> findVehiculosByPersona(int idPersona) {
         return vehicuDao.findByPersona(idPersona);
     }
+
+    public List<VehiculoDetalle> listarDetalleByPersona(int idPersona) {
+        return vehicuDao.findDetalleByPersona(idPersona);
+    }
     
     public boolean actualizarVehiculo(Vehiculo vehiculo) {
         return vehicuDao.update(vehiculo) > 0;

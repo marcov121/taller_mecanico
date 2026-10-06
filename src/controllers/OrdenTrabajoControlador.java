@@ -8,6 +8,8 @@ import java.util.List;
 import models.entities.Mecanico;
 import models.entities.OrdenTrabajo;
 import models.entities.OrdenTrabajoDetalle;
+import models.entities.Producto;
+import models.entities.Servicio;
 import models.entities.Vehiculo;
 import models.service.OrdenTrabajoService;
 
@@ -30,24 +32,53 @@ public class OrdenTrabajoControlador {
         return ordenTrabajoService.listarMecanicosActivos();
     }
     
-    public boolean registrar(OrdenTrabajo orden) {
+    public int registrar(OrdenTrabajo orden) {
         int idGenerado = ordenTrabajoService.registrarOrden(orden);
-        if (idGenerado != -1) {
-            orden.setIdOrdenTrabajo(idGenerado);
-            return true;
-        }
-        return false;
+        if (idGenerado > 0) orden.setIdOrdenTrabajo(idGenerado);
+        return idGenerado;
     }
     
     public boolean finalizar(int idOrdenTrabajo) {
-        return ordenTrabajoService.cambiarEstado(idOrdenTrabajo, "Finalizado");
+        return ordenTrabajoService.cambiarEstado(idOrdenTrabajo, "Finalizada");
     }
-    
+
     public boolean cancelar(int idOrdenTrabajo) {
-        return ordenTrabajoService.cambiarEstado(idOrdenTrabajo, "Cancelado");
+        return ordenTrabajoService.cambiarEstado(idOrdenTrabajo, "Cancelada");
     }
     
     public List<OrdenTrabajoDetalle> listarTodas() {
         return ordenTrabajoService.listarTodas();
+    }
+
+    public List<OrdenTrabajoDetalle> listarPorPersona(int idPersona) {
+        return ordenTrabajoService.listarPorPersona(idPersona);
+    }
+
+    public List<Servicio> listarServicios() {
+        return ordenTrabajoService.listarServicios();
+    }
+
+    public List<Producto> listarProductos() {
+        return ordenTrabajoService.listarProductos();
+    }
+
+    public boolean guardarDetalleServicio(int idOT, int idServicio, double precio) {
+        return ordenTrabajoService.guardarDetalleServicio(idOT, idServicio, precio);
+    }
+
+    public boolean guardarDetalleProducto(int idOT, int idProducto, int cantidad, double precio) {
+        return ordenTrabajoService.guardarDetalleProducto(idOT, idProducto, cantidad, precio);
+    }
+
+    public boolean actualizarTotal(int idOT, double total) {
+        return ordenTrabajoService.actualizarTotal(idOT, total);
+    }
+
+    public List<Object[]> obtenerDetalleServicio(int idOT) {
+        return ordenTrabajoService.obtenerDetalleServicio(idOT);
+    }
+
+    public List<Object[]> obtenerDetalleProducto(int idOT) {
+        return ordenTrabajoService.obtenerDetalleProducto(idOT);
     }
 }

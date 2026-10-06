@@ -25,6 +25,7 @@ public class frmMenuCliente extends javax.swing.JFrame {
         initComponents();
         cargarIcono(btnReservas, "/images/reserva.png");
         cargarIcono(btnOrdenTrabajo, "/images/ordentrabajo.png");
+        cargarIcono(btnVehiculos, "/images/vehiculo.png");
     }
     
     public frmMenuCliente(Usuario usuarioSesion) {
@@ -64,6 +65,7 @@ public class frmMenuCliente extends javax.swing.JFrame {
         btnCerrarSesion = new javax.swing.JButton();
         btnReservas = new javax.swing.JButton();
         btnOrdenTrabajo = new javax.swing.JButton();
+        btnVehiculos = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,21 +87,27 @@ public class frmMenuCliente extends javax.swing.JFrame {
         btnOrdenTrabajo.setText("ORDEN DE TRABAJO");
         btnOrdenTrabajo.addActionListener(this::btnOrdenTrabajoActionPerformed);
 
+        btnVehiculos.setText("VEHICULOS");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lblBienvenidoUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnCerrarSesion)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(84, 84, 84)
                 .addComponent(btnReservas, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnOrdenTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(127, 127, 127))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(280, 280, 280)
+                .addComponent(btnVehiculos)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,7 +119,9 @@ public class frmMenuCliente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnReservas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnOrdenTrabajo))
-                .addGap(0, 201, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addComponent(btnVehiculos)
+                .addGap(119, 119, 119))
         );
 
         pack();
@@ -131,6 +141,10 @@ public class frmMenuCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
         redirigirOpcionMenu(new frmOrdenTrabajo(usuarioSesion));
     }//GEN-LAST:event_btnOrdenTrabajoActionPerformed
+
+    private void btnVehiculosActionPerformed(java.awt.event.ActionEvent evt) {
+        redirigirOpcionMenu(new frmVehiculo(usuarioSesion));
+    }
 
     /**
      * @param args the command line arguments
@@ -161,6 +175,7 @@ public class frmMenuCliente extends javax.swing.JFrame {
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnOrdenTrabajo;
     private javax.swing.JButton btnReservas;
+    private javax.swing.JButton btnVehiculos;
     private javax.swing.JLabel lblBienvenidoUsuario;
     // End of variables declaration//GEN-END:variables
 }

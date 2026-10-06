@@ -6,6 +6,8 @@ package views;
 
 import controllers.UsuarioControlador;
 import javax.swing.JOptionPane;
+import models.entities.Persona;
+import utils.Variables;
 
 /**
  *
@@ -134,6 +136,12 @@ public class frmLogin extends javax.swing.JFrame {
         models.entities.Usuario usuarioAutenticado = controlador.autenticar(usuario, password);
 
         if (usuarioAutenticado != null) {
+           
+            Persona p = usuarioAutenticado.getPersona();
+            
+            Variables.codigoUsuario = p.getIdPersona();
+            Variables.datosEmpleado = p.getApellidos()+" "+p.getNombres();
+            
             JOptionPane.showMessageDialog(this, "Bienvenido");
             redirigirRol(usuarioAutenticado);
         } else {

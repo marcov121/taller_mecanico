@@ -121,6 +121,106 @@ public class ReservaDao {
         return false;
     }
     
+    public List<ReservaDetalle> findByPersona(int idPersona) {
+        List<ReservaDetalle> datos = new ArrayList<>();
+        Connection cn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        try {
+            cn = MySqlConexion.getConexion();
+            String sql = "SELECT r.id_resv, CONCAT(p.nom_per, ' ', p.ape_per) AS cliente, "
+                    + "v.pla_veh, "
+                    + "CONCAT(a.fec_age_dis, ' ', a.hor_ini_age_dis, ' - ', a.hor_fin_age_dis) AS horario, "
+                    + "r.mot_res, r.est_res_res "
+                    + "FROM tb_reserva r "
+                    + "INNER JOIN tb_persona p ON p.id_per = r.id_per_res "
+                    + "INNER JOIN tb_vehiculo v ON v.id_veh = r.id_veh_res "
+                    + "INNER JOIN tb_agenda_disponibilidad a ON a.id_age_age_dis = r.id_age_res "
+                    + "WHERE r.id_per_res = ? "
+                    + "ORDER BY r.id_resv DESC";
+            pstm = cn.prepareStatement(sql);
+            pstm.setInt(1, idPersona);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                ReservaDetalle d = new ReservaDetalle();
+                d.setIdReserva(rs.getInt("id_resv"));
+                d.setClienteNombreCompleto(rs.getString("cliente"));
+                d.setPlacaVehiculo(rs.getString("pla_veh"));
+                d.setFechaHorario(rs.getString("horario"));
+                d.setMotivo(rs.getString("mot_res"));
+                d.setEstado(rs.getString("est_res_res"));
+                datos.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstm != null) pstm.close();
+                if (cn != null) cn.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return datos;
+    }
+
+    public List<ReservaDetalle> findReservasPendientesByDocCliente(String numDoc) {
+        List<ReservaDetalle> datos = new ArrayList<>();
+        Connection cn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        try {
+            cn = MySqlConexion.getConexion();
+            String sql = "SELECT r.id_resv, CONCAT(p.nom_per, ' ', p.ape_per) AS cliente, "
+                    + "v.pla_veh, "
+                    + "CONCAT(a.fec_age_dis, ' ', a.hor_ini_age_dis, ' - ', a.hor_fin_age_dis) AS horario, "
+                    + "r.mot_res, r.est_res_res "
+                    + "FROM tb_reserva r "
+                    + "INNER JOIN tb_persona p ON p.id_per = r.id_per_res "
+                    + "INNER JOIN tb_vehiculo v ON v.id_veh = r.id_veh_res "
+                    + "INNER JOIN tb_agenda_disponibilidad a ON a.id_age_age_dis = r.id_age_res "
+                    + "WHERE p.num_doc_per = ? AND r.est_res_res IN ('pendiente', 'confirmada') "
+                    + "ORDER BY a.fec_age_dis DESC";
+            pstm = cn.prepareStatement(sql);
+            pstm.setString(1, numDoc);
+            rs = pstm.executeQuery();
+            while (rs.next()) {
+                ReservaDetalle d = new ReservaDetalle();
+                d.setIdReserva(rs.getInt("id_resv"));
+                d.setClienteNombreCompleto(rs.getString("cliente"));
+                d.setPlacaVehiculo(rs.getString("pla_veh"));
+                d.setFechaHorario(rs.getString("horario"));
+                d.setMotivo(rs.getString("mot_res"));
+                d.setEstado(rs.getString("est_res_res"));
+                datos.add(d);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstm != null) pstm.close();
+                if (cn != null) cn.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return datos;
+    }
+
+    public boolean convertirAOrden(int idReserva) {
+        try (Connection cn = MySqlConexion.getConexion();
+             PreparedStatement ps = cn.prepareStatement(
+                     "UPDATE tb_reserva SET est_res_res = 'convertida' WHERE id_resv = ?")) {
+            ps.setInt(1, idReserva);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public List<ReservaDetalle> findAll() {
         List<ReservaDetalle> datos = new ArrayList<>();
         Connection cn = null;
