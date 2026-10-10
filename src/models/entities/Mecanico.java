@@ -4,7 +4,6 @@
  */
 package models.entities;
 
-import models.entities.Especialidad;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +12,11 @@ import java.util.List;
  * @author James
  */
 public class Mecanico extends Persona {
+    // Liskov: se inicializa siempre para que cualquier Mecanico sea utilizable donde se espera una Persona
+    private List<Especialidad> especialidades = new ArrayList<>();
     
-    private List<Especialidad> especialidades;
+    public List<Especialidad> getEspecialidades() { return especialidades; }
+    public void setEspecialidades(List<Especialidad> e) { this.especialidades = (e != null) ? e : new ArrayList<>(); }
     
     public Mecanico() {
         super();
@@ -29,5 +31,14 @@ public class Mecanico extends Persona {
     @Override
     public String toString() {
         return nombres + " " + apellidos;
+    }
+    
+    // Prototype + Liskov: devuelve un Mecanico (retorno covariante) y copia su propia lista,
+    // para que el clon no comparta especialidades con el original. Respeta el contrat de Persona.clone(}.
+    @Override
+    public Mecanico clone() {
+        Mecanico copia = (Mecanico) super.clone();
+        copia.especialidades = (this.especialidades != null) ? new ArrayList<>(this.especialidades) : new ArrayList<>();
+        return copia;
     }
 }

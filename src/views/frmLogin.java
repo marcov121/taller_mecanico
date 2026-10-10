@@ -7,7 +7,7 @@ package views;
 import controllers.UsuarioControlador;
 import javax.swing.JOptionPane;
 import models.entities.Persona;
-import utils.Variables;
+import utils.SesionUsuario;
 
 /**
  *
@@ -139,8 +139,8 @@ public class frmLogin extends javax.swing.JFrame {
            
             Persona p = usuarioAutenticado.getPersona();
             
-            Variables.codigoUsuario = p.getIdPersona();
-            Variables.datosEmpleado = p.getApellidos()+" "+p.getNombres();
+            // Singleto
+            SesionUsuario.getInstancia().iniciar(usuarioAutenticado);
             
             JOptionPane.showMessageDialog(this, "Bienvenido");
             redirigirRol(usuarioAutenticado);
@@ -194,19 +194,15 @@ public class frmLogin extends javax.swing.JFrame {
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
     void redirigirRol(models.entities.Usuario usuarioAutenticado) {
-        javax.swing.JFrame siguienteVentana;
         
-        switch (usuarioAutenticado.getIdRol()) {
-            case 1:
-                siguienteVentana = new frmMenuCliente(usuarioAutenticado);
-                break;
-            default:
-                siguienteVentana = new frmMenuPrincipal(usuarioAutenticado);
-                break;
-        }
+        // FACTORY: se reutiliza MenuFactory en lugar de repetir el switch por rol
+        javax.swing.JFrame siguienteVentana = factory.MenuFactory.crearMenu(usuarioAutenticado);
         
-        siguienteVentana.setVisible(true);
+        // Mostrar la ventana de destino
         siguienteVentana.setLocationRelativeTo(null);
+        siguienteVentana.setVisible(true);
+        
+        // Cerrar la ventana de login
         this.dispose();
     }
 }

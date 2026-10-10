@@ -4,11 +4,8 @@
  */
 package models.entities;
 
-/**
- *
- * @author James
- */
-public class Persona {
+// Patrón Prototype: crea una copia del objeto a partir de sí mismo
+public class Persona implements Cloneable {
     
     protected int idPersona;
     protected String numeroDocumento;
@@ -94,5 +91,12 @@ public class Persona {
         this.sexo = sexo;
     }
     
-    
+    @Override
+    public Persona clone() {
+        try {
+            return (Persona) super.clone(); // campos primitivos/String (inmutables)
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
+    }
 }

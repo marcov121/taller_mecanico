@@ -249,14 +249,20 @@ public class frmCliente extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Nombres y apellidos son obligatorios", "Datos incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        clienteActual.setNombres(nombres);
-        clienteActual.setApellidos(apellidos);
-        clienteActual.setTelefono(telefono.isEmpty() ? null : telefono);
-        clienteActual.setDireccion(direccion);
-        clienteActual.setSexo(cboSexo.getSelectedItem().equals("Masculino") ? 'M' : 'F');
         
-        boolean actualizado = personaControlador.actualizar(clienteActual);
+        // Prototype: editar un clon para conservar el original
+        Persona editado = clienteActual.clone();
+        
+        editado.setNombres(nombres);
+        editado.setApellidos(apellidos);
+        editado.setTelefono(telefono.isEmpty() ? null : telefono);
+        editado.setDireccion(direccion);
+        editado.setSexo(cboSexo.getSelectedItem().equals("Masculino") ? 'M' : 'F');
+        
+        boolean actualizado = personaControlador.actualizar(editado);
+        
         if (actualizado) {
+            clienteActual = editado;
             JOptionPane.showMessageDialog(this, "Datos del cliente actualizado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "No se pudo actualizar", "Error", JOptionPane.ERROR_MESSAGE);

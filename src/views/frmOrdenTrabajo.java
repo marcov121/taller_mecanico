@@ -334,11 +334,14 @@ public class frmOrdenTrabajo extends javax.swing.JFrame {
 
         // Crear la OT
         Mecanico mecanico = (Mecanico) cboMecanico.getSelectedItem();
-        OrdenTrabajo orden = new OrdenTrabajo();
-        orden.setIdVehiculo(vehiculoEncontrado.getIdVehiculo());
-        orden.setIdMecanico(mecanico.getIdPersona());
-        orden.setObservacionCliente(observacion);
-        orden.setIdReserva(idReservaSeleccionada);
+        // Builder: la orden se construye paso a paso y build() valida los obligatorios
+        OrdenTrabajo orden = OrdenTrabajo.builder()
+                .vehiculo(vehiculoEncontrado.getIdVehiculo())
+                .mecanico(mecanico.getIdPersona())
+                .observacion(observacion)
+                .reserva(idReservaSeleccionada)
+                .total(total)
+                .build();
 
         int idOT = ordenTrabajoControlador.registrar(orden);
         if (idOT <= 0) {

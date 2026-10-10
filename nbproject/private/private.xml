@@ -2,6 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/utils/MySqlConexion.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/utils/SesionUsuario.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/views/frmLogin.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/factory/MenuFactory.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/models/entities/Rol.java</file>
+        </group>
     </open-files>
 </project-private>

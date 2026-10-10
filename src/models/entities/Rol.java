@@ -12,6 +12,9 @@ public class Rol {
     private int idRol;
     private String descripcion;
     private char estado;
+    
+    public static final int CLIENTE = 1;
+    public static final int ADMINISTRADOR = 2;
 
     public Rol() {
     }

@@ -63,4 +63,27 @@ public class OrdenTrabajo {
     public void setTotal(double total) {
         this.total = total;
     }
+    
+    // Patrón Builder: la orden tiene varios campos y algunos opcionales.
+    // se arma paso a paso de forma legible y build() valida los obligatorios, evitando órdenes incompletas.
+    public static Builder builder() { return new Builder(); }
+    
+    public static class Builder {
+        private Integer idReserva;
+        private int idVehiculo, idMecanico;
+        private String observacionCliente;
+        private double total;
+        
+        public Builder vehiculo(int id) { this.idVehiculo = id; return this; }
+        public Builder mecanico(int id) { this.idMecanico = id; return this; }
+        public Builder reserva(Integer id) { this.idReserva = id; return this; }
+        public Builder observacion(String obs) { this.observacionCliente = obs; return this; }
+        public Builder total(double total) { this.total = total; return this; }
+        
+        public OrdenTrabajo build() {
+            if (idVehiculo <= 0) throw new IllegalStateException("La orden requiere un vehículo");
+            if (idMecanico <= 0) throw new IllegalStateException("La orden requiere un mecánico");
+            return new OrdenTrabajo(0, idReserva, idVehiculo, idMecanico, observacionCliente, total);
+        }
+    }
 }

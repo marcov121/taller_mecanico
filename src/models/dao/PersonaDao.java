@@ -90,8 +90,6 @@ public class PersonaDao implements ICrud<Persona, Integer>{
         return resultado;
     }
 
-    
-
     @Override
     public int update(Persona d) {
         int salida = -1;
@@ -184,10 +182,48 @@ public class PersonaDao implements ICrud<Persona, Integer>{
         }
         return datos;
     }
+    
+    // Responsabilidad Única: un solo método convierte una fila del ResultSet en Persona
+    private Persona mapearPersona(ResultSet rs) throws SQLException {
+        Persona p = new Persona();
+        p.setIdPersona(rs.getInt("id_per"));
+        p.setNumeroDocumento(rs.getString("num_doc_per"));
+        p.setNombres(rs.getString("nom_per"));
+        p.setApellidos(rs.getString("ape_per"));
+        p.setTelefono(rs.getString("tel_per"));
+        p.setDireccion(rs.getString("dir_per"));
+        String sexo = rs.getString("sexo_per");
+        p.setSexo(sexo != null ? sexo.charAt(0) : ' ');
+        p.setEstado('1');
+        return p;
+    }
+    
+    // Consulta genérica reutilizada por findAll y findById
+    private List<Persona> consultar(String sql, Object... parametros) {
+        List<Persona> datos = new ArrayList<>();
+        try (Connection cn = MySqlConexion.getConexion();
+                PreparedStatement pstm = cn.prepareStatement(sql)){
+            for (int i=0; i<parametros.length; i++) pstm.setObject(i+1, parametros[i]);
+            try (ResultSet rs = pstm.executeQuery()) {
+                while (rs.next()) {
+                    Persona p = mapearPersona(rs);
+                    String est = rs.getString("est_per");
+                    p.setEstado(est != null ? est.charAt(0) : '0');
+                    datos.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return datos;
+    }
 
+    // Liskov: PersonaDao es un ICrud; quien use un ICrud debe poder llamar a findById
+    // sin que el programa se caiga. Ahora cumple el contrato
     @Override
     public Persona findById(Integer code) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Persona> r = consultar("SELECT * FROM tb_persona WHERE id_per=?", code);
+        return r.isEmpty() ? null : r.get(0);
     }
     
     public Persona findByDocumento(String numeroDocumento) {
@@ -231,8 +267,10 @@ public class PersonaDao implements ICrud<Persona, Integer>{
         return persona;
     }
 
+    // Liskov: PersonaDao es un ICrud; quien use un ICrud debe poder llamar a findAll
+    // sin que el programa se caiga. Ahora cumple el contrato
     @Override
     public List<Persona> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return consultar("SELECT * FROM tb_persona ORDER BY id_per");
     }
 }

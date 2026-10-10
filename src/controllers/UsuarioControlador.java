@@ -4,15 +4,10 @@
  */
 package controllers;
 
-import models.dao.PersonaDao;
-import models.dao.UsuarioDao;
-import java.sql.Connection;
 import java.sql.SQLException;
 import models.entities.Persona;
 import models.entities.Usuario;
 import models.service.UsuarioService;
-import utils.MySqlConexion;
-import utils.Utils;
 
 /**
  *
@@ -30,11 +25,11 @@ public class UsuarioControlador {
         return usuarioService.validarLogin(nombreUsuario, passwordPlano);
     }
 
+    // Responsabilidad Única: se quitó el hasheo de aquí. La contraseña ya llega hasheada
+    // desde la vista (igual que en el login); hashearla otra vez generaba un hash del hash
+    // y el usuario registrado nunca podría iniciar sesión.
     public boolean registrar(Persona p, Usuario u) {
         try {
-            // Hasheamos la contraseña antes de procesar el registro (Lógica de control/seguridad)
-            u.setPasswordHash(Utils.hashearPassword(u.getPasswordHash()));
-            
             // Delegamos TODA la transacción al servicio
             usuarioService.registrarUsuario(p, u);
             
