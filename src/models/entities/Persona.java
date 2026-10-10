@@ -91,6 +91,7 @@ public class Persona implements Cloneable {
         this.sexo = sexo;
     }
     
+    // Patrón Prototype: crea una copia del objeto a partir de sí mismo.
     @Override
     public Persona clone() {
         try {

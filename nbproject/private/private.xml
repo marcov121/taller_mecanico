@@ -8,6 +8,13 @@
             <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/views/frmLogin.java</file>
             <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/factory/MenuFactory.java</file>
             <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/models/entities/Rol.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/models/entities/OrdenTrabajo.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/views/frmOrdenTrabajo.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/models/entities/Persona.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/views/frmCliente.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/models/entities/Mecanico.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/models/dao/PersonaDao.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/controllers/UsuarioControlador.java</file>
         </group>
     </open-files>
 </project-private>
