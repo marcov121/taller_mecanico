@@ -4,6 +4,10 @@
  */
 package controllers;
 
+import command.OrdenComandos.CancelarOrdenCommand;
+import command.OrdenComandos.Command;
+import command.OrdenComandos.ControlOrdenes;
+import command.OrdenComandos.FinalizarOrdenCommand;
 import java.util.List;
 import models.entities.Mecanico;
 import models.entities.OrdenTrabajo;
@@ -19,6 +23,7 @@ import models.service.OrdenTrabajoService;
  */
 public class OrdenTrabajoControlador {
     private OrdenTrabajoService ordenTrabajoService;
+    private ControlOrdenes control = new ControlOrdenes();
     
     public OrdenTrabajoControlador() {
         this.ordenTrabajoService = new OrdenTrabajoService();
@@ -39,11 +44,13 @@ public class OrdenTrabajoControlador {
     }
     
     public boolean finalizar(int idOrdenTrabajo) {
-        return ordenTrabajoService.cambiarEstado(idOrdenTrabajo, "Finalizada");
+        Command comando = new FinalizarOrdenCommand(ordenTrabajoService, idOrdenTrabajo);
+        return control.ejecutar(comando);
     }
 
     public boolean cancelar(int idOrdenTrabajo) {
-        return ordenTrabajoService.cambiarEstado(idOrdenTrabajo, "Cancelada");
+        Command comando = new CancelarOrdenCommand(ordenTrabajoService, idOrdenTrabajo);
+        return control.ejecutar(comando);
     }
     
     public List<OrdenTrabajoDetalle> listarTodas() {

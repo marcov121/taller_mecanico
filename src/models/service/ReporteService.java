@@ -5,16 +5,16 @@ import models.dao.ReporteDao;
 import models.entities.OrdenTrabajoDetalle;
 import models.entities.ReporteServicioItem;
 
-public class ReporteService {
+public class ReporteService implements IReporteService {
     private final ReporteDao reporteDao = new ReporteDao();
 
-    public List<OrdenTrabajoDetalle> listarOrdenesParaReporte(
-            String fechaDesde, String fechaHasta, String estado) {
+    @Override
+    public List<OrdenTrabajoDetalle> listarOrdenesParaReporte(String fechaDesde, String fechaHasta, String estado) {
         return reporteDao.findOrdenesParaReporte(fechaDesde, fechaHasta, estado);
     }
 
-    public List<ReporteServicioItem> listarServiciosMasSolicitados(
-            String fechaDesde, String fechaHasta) {
+    @Override
+    public List<ReporteServicioItem> listarServiciosMasSolicitados(String fechaDesde, String fechaHasta) {
         return reporteDao.findServiciosMasSolicitados(fechaDesde, fechaHasta);
     }
 }

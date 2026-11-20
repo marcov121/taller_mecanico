@@ -181,15 +181,19 @@ public class frmReportes extends javax.swing.JFrame {
             protected File doInBackground() throws Exception {
                 String desde = getFecha(dcFechaDesde);
                 String hasta = getFecha(dcFechaHasta);
+                // Bridge: el reporte (abstracción) recibe el formato (implementación)
+                bridge.FormatoReporte formato = new bridge.FormatoPdf();
                 if (R_ORDENES.equals(tipo)) {
-                    return PdfGenerador.generarReporteOrdenes(
-                            controlador.listarOrdenesParaReporte(desde, hasta,
-                                    (String) cboEstado.getSelectedItem()),
-                            desde, hasta, (String) cboEstado.getSelectedItem());
+                    String estado = (String) cboEstado.getSelectedItem();
+                    return new bridge.ReporteOrdenes(
+                            controlador.listarOrdenesParaReporte(desde, hasta, estado),
+                            desde, hasta, estado, formato
+                    ).generar();
                 } else {
-                    return PdfGenerador.generarReporteServicios(
+                    return new bridge.ReporteServicios(
                             controlador.listarServiciosMasSolicitados(desde, hasta),
-                            desde, hasta);
+                            desde, hasta, formato
+                    ).generar();
                 }
             }
 
