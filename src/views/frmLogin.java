@@ -178,7 +178,8 @@ public class frmLogin extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        observer.OrdenSujeto.getInstancia().registrar(new observer.AuditoriaObserver());
+        observer.OrdenSujeto.getInstancia().registrar(new observer.ContadorOrdenesObserver());
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new frmLogin().setVisible(true));
     }

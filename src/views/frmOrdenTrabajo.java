@@ -396,7 +396,7 @@ public class frmOrdenTrabajo extends javax.swing.JFrame {
             return;
         }
         String estadoActual = String.valueOf(tblOrdenTrabajo.getValueAt(tblOrdenTrabajo.getSelectedRow(), 4));
-        if (!"En proceso".equals(estadoActual)) {
+        if (!new state.OrdenContexto(estadoActual).puedeFinalizar()) {
             JOptionPane.showMessageDialog(this, "Solo se pueden finalizar órdenes en estado 'En proceso'.", "Estado no permitido", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -420,7 +420,7 @@ public class frmOrdenTrabajo extends javax.swing.JFrame {
             return;
         }
         String estadoActual = String.valueOf(tblOrdenTrabajo.getValueAt(tblOrdenTrabajo.getSelectedRow(), 4));
-        if (!"Activa".equals(estadoActual) && !"En proceso".equals(estadoActual)) {
+        if (!new state.OrdenContexto(estadoActual).puedeCancelar()) {
             JOptionPane.showMessageDialog(this, "Solo se pueden cancelar órdenes en estado 'Activa' o 'En proceso'.", "Estado no permitido", JOptionPane.WARNING_MESSAGE);
             return;
         }

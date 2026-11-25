@@ -16,6 +16,7 @@ import models.entities.Producto;
 import models.entities.Servicio;
 import models.entities.Vehiculo;
 import models.service.OrdenTrabajoService;
+import observer.OrdenSujeto;
 
 /**
  *
@@ -24,6 +25,7 @@ import models.service.OrdenTrabajoService;
 public class OrdenTrabajoControlador {
     private OrdenTrabajoService ordenTrabajoService;
     private ControlOrdenes control = new ControlOrdenes();
+    private final OrdenSujeto sujeto = OrdenSujeto.getInstancia();
     
     public OrdenTrabajoControlador() {
         this.ordenTrabajoService = new OrdenTrabajoService();
@@ -39,18 +41,23 @@ public class OrdenTrabajoControlador {
     
     public int registrar(OrdenTrabajo orden) {
         int idGenerado = ordenTrabajoService.registrarOrden(orden);
-        if (idGenerado > 0) orden.setIdOrdenTrabajo(idGenerado);
+        if (idGenerado > 0) {
+            orden.setIdOrdenTrabajo(idGenerado);
+            sujeto.cambiarOrden("REGISTRADA", idGenerado);
+        }
         return idGenerado;
     }
     
     public boolean finalizar(int idOrdenTrabajo) {
-        Command comando = new FinalizarOrdenCommand(ordenTrabajoService, idOrdenTrabajo);
-        return control.ejecutar(comando);
+        boolean ok = ordenTrabajoService.cambiarEstado(idOrdenTrabajo, "Finalizada");
+        if (ok) sujeto.cambiarOrden("FINALIZADA", idOrdenTrabajo);
+        return ok;
     }
 
     public boolean cancelar(int idOrdenTrabajo) {
-        Command comando = new CancelarOrdenCommand(ordenTrabajoService, idOrdenTrabajo);
-        return control.ejecutar(comando);
+        boolean ok = ordenTrabajoService.cambiarEstado(idOrdenTrabajo, "Cancelada");
+        if (ok) sujeto.cambiarOrden("CANCELADA", idOrdenTrabajo);
+        return ok;
     }
     
     public List<OrdenTrabajoDetalle> listarTodas() {

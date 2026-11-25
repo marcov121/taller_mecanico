@@ -17,6 +17,19 @@
             <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/bridge/Reporte.java</file>
             <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/bridge/ReporteOrdenes.java</file>
             <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/bridge/ReporteServicios.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/views/frmReportes.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/EstadoOrden.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/EnProcesoEstado.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/ActivaEstado.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/BorradorEstado.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/FinalizadaEstado.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/EntregadaEstado.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/CanceladaEstado.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/OrdenContexto.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/views/frmOrdenTrabajo.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/observer/Observador.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/observer/Sujeto.java</file>
+            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/observer/OrdenSujeto.java</file>
         </group>
     </open-files>
 </project-private>
