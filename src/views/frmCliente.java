@@ -8,6 +8,7 @@ import controllers.PersonaControlador;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import memento.HistorialCliente;
 import models.entities.Persona;
 
 /**
@@ -19,6 +20,8 @@ public class frmCliente extends javax.swing.JFrame {
 
     private final PersonaControlador personaControlador = new PersonaControlador();
     private Persona clienteActual;
+    
+    private final HistorialCliente historial = new HistorialCliente();  // MEMENTO: caretaker con los cambios hechos
 
     private models.entities.Usuario usuarioSesion;
     
@@ -64,6 +67,7 @@ public class frmCliente extends javax.swing.JFrame {
         btnVolver = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblClientes = new javax.swing.JTable();
+        btnDeshacer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -126,6 +130,13 @@ public class frmCliente extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblClientes);
 
+        btnDeshacer.setText("DESHACER");
+        btnDeshacer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeshacerActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -143,11 +154,6 @@ public class frmCliente extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(202, 202, 202)
-                                .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel3)
@@ -164,7 +170,14 @@ public class frmCliente extends javax.swing.JFrame {
                                     .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(cboSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(112, 112, 112)
+                                .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(60, 60, 60)
+                                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(84, 84, 84)
+                                .addComponent(btnDeshacer, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -202,7 +215,8 @@ public class frmCliente extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnActualizar)
-                    .addComponent(btnEliminar))
+                    .addComponent(btnEliminar)
+                    .addComponent(btnDeshacer))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -262,6 +276,7 @@ public class frmCliente extends javax.swing.JFrame {
         boolean actualizado = personaControlador.actualizar(editado);
         
         if (actualizado) {
+            historial.agregar(clienteActual.guardar());  // MEMENTO: se guarda como estaba antes del cambio
             clienteActual = editado;
             JOptionPane.showMessageDialog(this, "Datos del cliente actualizado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -282,6 +297,8 @@ public class frmCliente extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Cliente eliminado correctamente");
             limpiar();
             clienteActual = null;
+            
+            historial.limpiar();
         } else {
             JOptionPane.showMessageDialog(this, "No se pudo eliminar al cliente", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -299,6 +316,29 @@ public class frmCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
         cargarFilaSeleccionada();
     }//GEN-LAST:event_tblClientesMouseReleased
+
+    private void btnDeshacerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeshacerActionPerformed
+        // TODO add your handling code here:
+        if (clienteActual == null || historial.estaVacio()) {
+            JOptionPane.showMessageDialog(this, "No hay cambios para deshacer", "Sin cambios", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Persona anterior = clienteActual.clone();  // PROTOTYPE: se trabaja sobre una copia
+        anterior.restaurar(historial.ultimo());  // MEMENTO: la copia vuelve al estado guardado
+        if (personaControlador.actualizar(anterior)) {  // se vuelve a guardar en la BD
+            historial.quitarUltimo();  // solo se gasta el memento si la BD aceptó el cambio
+            clienteActual = anterior;
+            txtNombres.setText(anterior.getNombres());
+            txtApellidos.setText(anterior.getApellidos());
+            txtTelefono.setText(anterior.getTelefono() == null ? "" : anterior.getTelefono());
+            txtDireccion.setText(anterior.getDireccion());
+            cboSexo.setSelectedItem(anterior.getSexo() == 'M' ? "Masculino" : "Femenino");
+            listadoClientes();
+            JOptionPane.showMessageDialog(this, "Cambios deshechos", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo deshacer el cambio", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnDeshacerActionPerformed
 
     private void cargarFilaSeleccionada(){
         int fila = tblClientes.getSelectedRow();
@@ -328,6 +368,8 @@ public class frmCliente extends javax.swing.JFrame {
         clienteActual.setDireccion(String.valueOf(modelo.getValueAt(fila, 5)));
         clienteActual.setSexo(sexoStr.equals("Masculino") ? 'M' : 'F');
         clienteActual.setEstado("Activo".equals(modelo.getValueAt(fila, 7)) ? '1' : '0');
+        
+        historial.limpiar();  // MEMENTO: cada cliente seleccionado empieza con historial vacio
     }
     
     void limpiarFormulario() {
@@ -366,6 +408,7 @@ public class frmCliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnDeshacer;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cboSexo;

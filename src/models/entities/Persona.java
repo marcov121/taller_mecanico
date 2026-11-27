@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models.entities;
+
+import memento.PersonaMemento;
 
 // Patrón Prototype: crea una copia del objeto a partir de sí mismo
 public class Persona implements Cloneable {
@@ -99,5 +97,20 @@ public class Persona implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError(e);
         }
+    }
+    
+    /* PATRON MEMENTO: Persona es el ORIGINATOR. guardar() crea una instantanea de sus datos
+        editables y restaurar() vuelve a ellos.
+    */
+    public PersonaMemento guardar() {
+        return new PersonaMemento(nombres, apellidos, telefono, direccion, sexo);
+    }
+    
+    public void restaurar(PersonaMemento m) {
+        this.nombres = m.getNombres();
+        this.apellidos = m.getApellidos();
+        this.telefono = m.getTelefono();
+        this.direccion = m.getDireccion();
+        this.sexo = m.getSexo();
     }
 }
