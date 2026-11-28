@@ -4,35 +4,6 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/factory/MenuFactory.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/controllers/OrdenTrabajoControlador.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/command/OrdenComandos.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/models/service/IReporteService.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/models/service/ReporteServiceProxy.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/models/service/ReporteService.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/controllers/ReporteControlador.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/utils/PdfGenerador.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/bridge/FormatoReporte.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/bridge/FormatoPdf.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/bridge/FormatoCsv.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/bridge/Reporte.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/bridge/ReporteOrdenes.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/bridge/ReporteServicios.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/views/frmReportes.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/EstadoOrden.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/EnProcesoEstado.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/ActivaEstado.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/BorradorEstado.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/FinalizadaEstado.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/EntregadaEstado.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/CanceladaEstado.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/state/OrdenContexto.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/views/frmOrdenTrabajo.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/observer/Observador.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/observer/Sujeto.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/observer/OrdenSujeto.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/observer/AuditoriaObserver.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/observer/ContadorOrdenesObserver.java</file>
-            <file>file:/C:/Users/marco/Downloads/TallerMecanico_POO/TallerMecanico_POO/src/views/frmLogin.java</file>
         </group>
     </open-files>
 </project-private>

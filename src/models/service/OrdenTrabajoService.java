@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models.service;
 
 import java.util.List;
 import models.dao.OrdenTrabajoDao;
+import models.entities.ItemOrden;
 import models.entities.Mecanico;
 import models.entities.OrdenTrabajo;
 import models.entities.OrdenTrabajoDetalle;
@@ -13,10 +10,6 @@ import models.entities.Producto;
 import models.entities.Servicio;
 import models.entities.Vehiculo;
 
-/**
- *
- * @author marco
- */
 public class OrdenTrabajoService {
     private OrdenTrabajoDao ordenTrabajoDao = new OrdenTrabajoDao();
     
@@ -70,5 +63,19 @@ public class OrdenTrabajoService {
 
     public List<Object[]> obtenerDetalleProducto(int idOT) {
         return ordenTrabajoDao.findDetalleProductoByOT(idOT);
+    }
+    
+    public int registrarOrdenCompleta(OrdenTrabajo orden, boolean esServicio, List<ItemOrden> items) {
+        int idOT = registrarOrden(orden);
+        if (idOT <= 0) return -1;
+        for (ItemOrden item : items) {
+            if (esServicio) {
+                guardarDetalleServicio(idOT, item.getIdItem(), item.getPrecioUnitario());
+            } else {
+                guardarDetalleProducto(idOT, item.getIdItem(), item.getCantidad(), item.getPrecioUnitario());
+            }
+        }
+        actualizarTotal(idOT, ItemOrden.total(items));
+        return idOT;
     }
 }

@@ -247,7 +247,7 @@ public class frmEspecialidad extends javax.swing.JFrame {
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         // TODO add your handling code here:
-        javax.swing.JFrame menuDestion = (usuarioSesion != null) ? new frmMenuPrincipal(usuarioSesion) : new frmMenuPrincipal();
+        javax.swing.JFrame menuDestion = factory.MenuFactory.crearMenu(usuarioSesion);
         menuDestion.setVisible(true);
         menuDestion.setLocationRelativeTo(null);
         this.dispose();

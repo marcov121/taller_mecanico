@@ -447,12 +447,7 @@ public class frmVehiculo extends javax.swing.JFrame {
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         // TODO add your handling code here:
-        javax.swing.JFrame menuDestino;
-        if (usuarioSesion != null && usuarioSesion.getIdRol() == 1) {
-            menuDestino = new frmMenuCliente(usuarioSesion);
-        } else {
-            menuDestino = (usuarioSesion != null) ? new frmMenuPrincipal(usuarioSesion) : new frmMenuPrincipal();
-        }
+        javax.swing.JFrame menuDestino = factory.MenuFactory.crearMenu(usuarioSesion);
         menuDestino.setVisible(true);
         menuDestino.setLocationRelativeTo(null);
         this.dispose();

@@ -27,7 +27,7 @@ public abstract class MenuFactory {
         MenuFactory fabrica = FABRICAS.get(usuario.getIdRol());
         if (fabrica == null) fabrica = FABRICAS.get(Rol.ADMINISTRADOR);
         
-        return fabrica.crearMenu(usuario);
+        return fabrica.crear(usuario);  // antes crearMenu(usuario)
     }
 }
 

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import models.entities.ItemOrden;
 import models.entities.Mecanico;
 import models.entities.OrdenTrabajo;
 import models.entities.OrdenTrabajoDetalle;
@@ -292,93 +293,68 @@ public class frmOrdenTrabajo extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "La observación del cliente es obligatoria", "Datos incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        String tipo = (String) cboTipoOt.getSelectedItem();
-        DefaultTableModel modeloItems = (DefaultTableModel) tblItems.getModel();
-
-        // Validar y calcular total
-        double total = 0;
-        boolean hayItems = false;
-
-        if ("Servicio".equals(tipo)) {
-            for (int i = 0; i < modeloItems.getRowCount(); i++) {
-                if (Boolean.TRUE.equals(modeloItems.getValueAt(i, 0))) {
-                    hayItems = true;
-                    total += serviciosCargados.get(i).getPrecioBase();
-                }
-            }
-        } else {
-            for (int i = 0; i < modeloItems.getRowCount(); i++) {
-                int cant = parseCantidad(modeloItems.getValueAt(i, 0));
-                if (cant > 0) {
-                    int stock = productosCargados.get(i).getStock();
-                    if (cant > stock) {
-                        JOptionPane.showMessageDialog(this,
-                            "Stock insuficiente para: " + productosCargados.get(i).getDescripcion()
-                            + "  (disponible: " + stock + ")",
-                            "Stock insuficiente", JOptionPane.WARNING_MESSAGE);
-                        return;
-                    }
-                    hayItems = true;
-                    total += cant * productosCargados.get(i).getPrecioVenta();
-                }
-            }
-        }
-
-        if (!hayItems) {
-            JOptionPane.showMessageDialog(this,
-                "Seleccione al menos un " + tipo.toLowerCase() + " para la orden.",
-                "Sin ítems", JOptionPane.WARNING_MESSAGE);
+        
+        boolean esServicio = "Servicio".equals(cboTipoOt.getSelectedItem());
+        List<ItemOrden> items = esServicio ? leerServiciosSeleccionados() : leerProductosSeleccionados();
+        if (items == null) return;
+        if (items.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Seleccione al menos un " + (esServicio ? "servicio" : "producto") + " para la orden.",
+                    "Sin items", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        // Crear la OT
+        
         Mecanico mecanico = (Mecanico) cboMecanico.getSelectedItem();
-        // Builder: la orden se construye paso a paso y build() valida los obligatorios
         OrdenTrabajo orden = OrdenTrabajo.builder()
                 .vehiculo(vehiculoEncontrado.getIdVehiculo())
                 .mecanico(mecanico.getIdPersona())
                 .observacion(observacion)
                 .reserva(idReservaSeleccionada)
-                .total(total)
                 .build();
-
-        int idOT = ordenTrabajoControlador.registrar(orden);
+        
+        int idOT = ordenTrabajoControlador.registrarCompleta(orden, esServicio, items);
         if (idOT <= 0) {
             JOptionPane.showMessageDialog(this, "No se pudo registrar la orden de trabajo", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        // Guardar ítems
-        if ("Servicio".equals(tipo)) {
-            for (int i = 0; i < modeloItems.getRowCount(); i++) {
-                if (Boolean.TRUE.equals(modeloItems.getValueAt(i, 0))) {
-                    Servicio s = serviciosCargados.get(i);
-                    ordenTrabajoControlador.guardarDetalleServicio(idOT, s.getIdServicio(), s.getPrecioBase());
-                }
-            }
-        } else {
-            for (int i = 0; i < modeloItems.getRowCount(); i++) {
-                int cant = parseCantidad(modeloItems.getValueAt(i, 0));
-                if (cant > 0) {
-                    Producto p = productosCargados.get(i);
-                    ordenTrabajoControlador.guardarDetalleProducto(idOT, p.getIdProducto(), cant, p.getPrecioVenta());
-                }
-            }
-        }
-
-        // Actualizar total en la OT
-        ordenTrabajoControlador.actualizarTotal(idOT, total);
-
-        // Marcar reserva como convertida si la OT viene de una
         if (idReservaSeleccionada != null) {
             reservaControlador.convertirAOrden(idReservaSeleccionada);
         }
+        JOptionPane.showMessageDialog(this, 
+                "Orden registrada | Total: S/. " + String.format("%.2f", ItemOrden.total(items)), "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        limpiarFormularioOrden();
+    }//GEN-LAST:event_btnRegistrarActionPerformed
 
-        JOptionPane.showMessageDialog(this,
-            "Orden registrada  |  Total: S/. " + String.format("%.2f", total),
-            "Éxito", JOptionPane.INFORMATION_MESSAGE);
-
+    private List<ItemOrden> leerServiciosSeleccionados() {
+        DefaultTableModel modelo = (DefaultTableModel) tblItems.getModel();
+        List<ItemOrden> items = new ArrayList<>();
+        for (int i=0; i<modelo.getRowCount(); i++) {
+            if (Boolean.TRUE.equals(modelo.getValueAt(i, 0))) {
+                Servicio s = serviciosCargados.get(i);
+                items.add(new ItemOrden(s.getIdServicio(), 1, s.getPrecioBase()));
+            }
+        }
+        return items;
+    }
+    
+    private List<ItemOrden> leerProductosSeleccionados() {
+        DefaultTableModel modelo = (DefaultTableModel) tblItems.getModel();
+        List<ItemOrden> items = new ArrayList<>();
+        for (int i=0; i<modelo.getRowCount(); i++) {
+            int cantidad = parseCantidad(modelo.getValueAt(i, 0));
+            if (cantidad <= 0) continue;
+            Producto p = productosCargados.get(i);
+            if (cantidad > p.getStock()) {
+                JOptionPane.showMessageDialog(this, 
+                        "Stock insuficiente para: " + p.getDescripcion() + " (disponible: " + p.getStock() + ")",
+                        "Stock insuficiente", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+            items.add(new ItemOrden(p.getIdProducto(), cantidad, p.getPrecioVenta()));
+        }
+        return items;
+    }
+    
+    private void limpiarFormularioOrden() {
         txtPlaca.setText("");
         txtObservacion.setText("");
         txtDocCliente.setText("");
@@ -387,8 +363,8 @@ public class frmOrdenTrabajo extends javax.swing.JFrame {
         idReservaSeleccionada = null;
         cargarItems();
         cargarTablaOrdenes();
-    }//GEN-LAST:event_btnRegistrarActionPerformed
-
+    }
+    
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         // TODO add your handling code here:
         if (idOrdenSeleccionada == -1) {

@@ -7,6 +7,7 @@ package models.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import models.entities.Mecanico;
@@ -156,93 +157,54 @@ public class OrdenTrabajoDao {
         }
         return false;
     }
+
+    private static final String SELECT_ORDENES =
+            "SELECT o.id_ord_trab, v.pla_veh, CONCAT(p.nom_per, ' ', p.ape_per) AS cliente, "
+            + "CONCAT(pm.nom_per, ' ', pm.ape_per) AS mecanico, e.des_est_ord_tra, o.fec_ing_ord_tra, o.tot_ord_tra"
+            + "FROM tb_orden_trabajo o "
+            + "INNER JOIN tb_vehiculo v ON v.id_veh = o.id_veh_ord_tra "
+            + "INNER JOIN tb_persona p ON p.id_per = v.id_per_veh "
+            + "INNER JOIN tb_mecanico m ON m.id_per_mec = o.id_mec_ord_tra "
+            + "INNER JOIN tb_persona pm ON pm.id_per = m.id_per_mec "
+            + "INNER JOIN tb_estado_orden_trabajo e ON e.id_est_est_ord_tra = o.id_est_est_ord_tra ";
     
-    public List<OrdenTrabajoDetalle> findAll() {
+    private OrdenTrabajoDetalle mapearOrden(ResultSet rs) throws SQLException {
+        OrdenTrabajoDetalle d = new OrdenTrabajoDetalle();
+        d.setIdOrdenTrabajo(rs.getInt("id_ord_trab"));
+        d.setPlacaVehiculo(rs.getString("pla_veh"));
+        d.setClienteNombreCompleto(rs.getString("cliente"));
+        d.setMecanicoNombreCompleto(rs.getString("mecanico"));
+        d.setEstado(rs.getString("des_est_ord_tra"));
+        d.setFechaIngreso(String.valueOf(rs.getTimestamp("fec_ing_ord_tra")));
+        d.setTotal(rs.getDouble("tot_ord_tra"));
+        return d;
+    }
+    
+    private List<OrdenTrabajoDetalle> consultarOrdenes(String filtro, Object... parametros) {
         List<OrdenTrabajoDetalle> datos = new ArrayList<>();
-        Connection cn = null;
-        PreparedStatement pstm = null;
-        ResultSet rs = null;
-        try {
-            cn = MySqlConexion.getConexion();
-            String sql = "SELECT o.id_ord_trab, v.pla_veh, CONCAT(p.nom_per, ' ', p.ape_per) AS cliente, "
-                    + "CONCAT(pm.nom_per, ' ', pm.ape_per) AS mecanico, e.des_est_ord_tra, o.fec_ing_ord_tra, o.tot_ord_tra "
-                    + "FROM tb_orden_trabajo o "
-                    + "INNER JOIN tb_vehiculo v ON v.id_veh = o.id_veh_ord_tra "
-                    + "INNER JOIN tb_persona p ON p.id_per = v.id_per_veh "
-                    + "INNER JOIN tb_mecanico m ON m.id_per_mec = o.id_mec_ord_tra "
-                    + "INNER JOIN tb_persona pm ON pm.id_per = m.id_per_mec "
-                    + "INNER JOIN tb_estado_orden_trabajo e ON e.id_est_est_ord_tra = o.id_est_est_ord_tra "
-                    + "ORDER BY o.id_ord_trab DESC";
-            pstm = cn.prepareStatement(sql);
-            rs = pstm.executeQuery();
-            while (rs.next()) {
-                OrdenTrabajoDetalle d = new OrdenTrabajoDetalle();
-                d.setIdOrdenTrabajo(rs.getInt("id_ord_trab"));
-                d.setPlacaVehiculo(rs.getString("pla_veh"));
-                d.setClienteNombreCompleto(rs.getString("cliente"));
-                d.setMecanicoNombreCompleto(rs.getString("mecanico"));
-                d.setEstado(rs.getString("des_est_ord_tra"));
-                d.setFechaIngreso(String.valueOf(rs.getTimestamp("fec_ing_ord_tra")));
-                d.setTotal(rs.getDouble("tot_ord_tra"));
-                datos.add(d);
+        String sql = SELECT_ORDENES + filtro + "ORDER BY o.id_ord_trab DESC";
+        try (Connection cn = MySqlConexion.getConexion();
+                PreparedStatement pstm = cn.prepareStatement(sql)) {
+            for (int i=0; i<parametros.length; i++) {
+                pstm.setObject(i+1, parametros[i]);
+            }
+            try (ResultSet rs = pstm.executeQuery()) {
+                while (rs.next()) {
+                    datos.add(mapearOrden(rs));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstm != null) pstm.close();
-                if (cn != null) cn.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
         }
         return datos;
     }
-
+    
+    public List<OrdenTrabajoDetalle> findAll() {
+        return consultarOrdenes("");
+    }
+    
     public List<OrdenTrabajoDetalle> findByPersona(int idPersona) {
-        List<OrdenTrabajoDetalle> datos = new ArrayList<>();
-        Connection cn = null;
-        PreparedStatement pstm = null;
-        ResultSet rs = null;
-        try {
-            cn = MySqlConexion.getConexion();
-            String sql = "SELECT o.id_ord_trab, v.pla_veh, CONCAT(p.nom_per, ' ', p.ape_per) AS cliente, "
-                    + "CONCAT(pm.nom_per, ' ', pm.ape_per) AS mecanico, e.des_est_ord_tra, o.fec_ing_ord_tra, o.tot_ord_tra "
-                    + "FROM tb_orden_trabajo o "
-                    + "INNER JOIN tb_vehiculo v ON v.id_veh = o.id_veh_ord_tra "
-                    + "INNER JOIN tb_persona p ON p.id_per = v.id_per_veh "
-                    + "INNER JOIN tb_mecanico m ON m.id_per_mec = o.id_mec_ord_tra "
-                    + "INNER JOIN tb_persona pm ON pm.id_per = m.id_per_mec "
-                    + "INNER JOIN tb_estado_orden_trabajo e ON e.id_est_est_ord_tra = o.id_est_est_ord_tra "
-                    + "WHERE v.id_per_veh = ? "
-                    + "ORDER BY o.id_ord_trab DESC";
-            pstm = cn.prepareStatement(sql);
-            pstm.setInt(1, idPersona);
-            rs = pstm.executeQuery();
-            while (rs.next()) {
-                OrdenTrabajoDetalle d = new OrdenTrabajoDetalle();
-                d.setIdOrdenTrabajo(rs.getInt("id_ord_trab"));
-                d.setPlacaVehiculo(rs.getString("pla_veh"));
-                d.setClienteNombreCompleto(rs.getString("cliente"));
-                d.setMecanicoNombreCompleto(rs.getString("mecanico"));
-                d.setEstado(rs.getString("des_est_ord_tra"));
-                d.setFechaIngreso(String.valueOf(rs.getTimestamp("fec_ing_ord_tra")));
-                d.setTotal(rs.getDouble("tot_ord_tra"));
-                datos.add(d);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (pstm != null) pstm.close();
-                if (cn != null) cn.close();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-        return datos;
+        return consultarOrdenes("WHERE v.id_per_veh = ? ", idPersona);
     }
 
     public List<Servicio> findServicios() {

@@ -9,6 +9,7 @@ import command.OrdenComandos.Command;
 import command.OrdenComandos.ControlOrdenes;
 import command.OrdenComandos.FinalizarOrdenCommand;
 import java.util.List;
+import models.entities.ItemOrden;
 import models.entities.Mecanico;
 import models.entities.OrdenTrabajo;
 import models.entities.OrdenTrabajoDetalle;
@@ -94,5 +95,11 @@ public class OrdenTrabajoControlador {
 
     public List<Object[]> obtenerDetalleProducto(int idOT) {
         return ordenTrabajoService.obtenerDetalleProducto(idOT);
+    }
+    
+    public int registrarCompleta(OrdenTrabajo orden, boolean esServicio, List<ItemOrden> items) {
+        int idGenerado = ordenTrabajoService.registrarOrdenCompleta(orden, esServicio, items);
+        if (idGenerado > 0) orden.setIdOrdenTrabajo(idGenerado);
+        return idGenerado;
     }
 }
